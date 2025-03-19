@@ -1,20 +1,40 @@
-import pads from "./pads"
+import padsData from "./pads"
+import React from "react"
+import Pad from "./Pad"
 
-export default function App() {
-    /**
-     * Challenge part 1:
-     * 1. Initialize state with the default value of the
-     *    array pulled in from pads.js
-     * 2. Map over that state array and display each one
-     *    as a <button> (CSS is already written for you)
-     *    (Don't worry about using the "on" or "color" 
-     *    properties yet)
-     */
-    return (
-        <main>
-            <div className="pad-container">
-                {/* <button>s go here */}
-            </div>
-        </main>
+export default function App({ darkMode }) {
+  const [pads, setPads] = React.useState(padsData)
+
+  const styles = {
+    backgroundColor: darkMode ? "#222222" : "#cccccc"
+  }
+
+  function toggle(id) {
+    setPads(prevPads =>
+      prevPads.map(pad =>
+        pad.id === id ? { ...pad, on: !pad.on } : pad
+      )
     )
+  }
+
+  function toggleAllOff() {
+    setPads(prevPads =>
+      prevPads.map(item =>
+        ({...item, on: false})
+      )
+    )
+  }
+
+  const buttons = pads.map(pad =>
+    <Pad key={pad.id} id={pad.id} color={pad.color} on={pad.on} onClickHandle={toggle} />
+  )
+
+  return (
+    <main>
+      <div className="pad-container">
+        {buttons}
+      </div>
+      <button onClick={toggleAllOff}>Turn all off</button>
+    </main>
+  )
 }
